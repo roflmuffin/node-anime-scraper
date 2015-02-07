@@ -14,6 +14,7 @@ Anime.fromName('Haikyuu!!').then(function(anime) {
   });
 });
 ```
+## Outputs
 ```
 {
     "names": [
