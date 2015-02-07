@@ -28,12 +28,12 @@ var AnimeUtils = {
     }
 
     got(url, options, function (err, data, resp) {
-      /* Handle server not found & unauthorized error codes */
+      // Handle server not found & unauthorized error codes
       if (err) throw err
       if (resp.statusCode !== 200) deferred.reject(resp.statusCode + ':' + 'Page was not received', null)
 
       var $ = cheerio.load(data)
-      /* Gets content rows inside pages (this usually contains anime links or episode links) */
+      // Gets content rows inside pages (this usually contains anime links or episode links)
       var rows = PageUtils.getPageRows($)
 
       var results = []
@@ -41,7 +41,7 @@ var AnimeUtils = {
       for (var i = 0; i < rows.length; i++) {
         var rowColumns = $(rows[i]).children()
 
-        /* Name element is found in the first column */
+        // Name element is found in the first column
         var nameElement = rowColumns.eq(0).find('a')
         var name = nameElement.text().trim().replace(/(\r\n|\n|\r)/gm, '')
         var url = WEBSITE_ROOT + nameElement.attr('href')
@@ -62,9 +62,7 @@ var AnimeUtils = {
 }
 
 var PageUtils = {
-  /*  These helper functions parse information about the anime on the page,
-    and boy is their HTML structure ugly!
-   */
+
   /**
    * Splits the foreign names into an array from a string
    * @param  {string} text The string to be split
@@ -142,7 +140,7 @@ var PageUtils = {
     for (var i = 0; i < rows.length; i++) {
       var rowColumns = $(rows[i]).children()
 
-      /* Name element is found in the first column */
+      // Name element is found in the first column
       var nameElement = rowColumns.eq(0).find('a')
       var name = nameElement.text().trim().replace(/(\r\n|\n|\r)/gm, '')
       var url = WEBSITE_ROOT + nameElement.attr('href')
@@ -152,6 +150,7 @@ var PageUtils = {
 
     return arr
   }
+
 }
 
 /**
@@ -182,9 +181,6 @@ Episode.getVideoUrl = function () {
 
   return deferred.promise
 }
-
-/* Encapsulates anime information
- *  Includes method to retrieve videoUrls for every episode */
 
 /**
  * Anime constructor
@@ -227,7 +223,7 @@ Anime.fromName = function (name) {
     for (var i = 0; i < results.length; i++) {
       var anime = results[i]
 
-      /* Search for direct */
+      // Search for direct URL
       if (anime.name === name) {
         Anime.fromUrl(anime.url).then(function (animeObj) {
           deferred.resolve(animeObj)
@@ -251,11 +247,11 @@ Anime.fromUrl = function (pageUrl) {
     if (err) deferred.reject(new Error('Connection timeout'))
     var $ = cheerio.load(data)
 
-    /* We must keep track of the summary text index because it is an arbitrary tag one after */
+    // We must keep track of the summary text index because it is an arbitrary tag one after
     var indexOfSummary = Number.MAX_VALUE
     var info = {}
 
-    /* Parse foreign names, genres and air date from page */
+    // Parse foreign names, genres and air date from page
     $('.barContent').eq(0).find('p').each(function (index) {
       var text = $(this).text().trim()
 
@@ -272,10 +268,10 @@ Anime.fromUrl = function (pageUrl) {
       }
     })
 
-    /* Anime Name */
+    // Anime Name
     var animeName = $('.bigChar').first().text()
 
-    /* Episode Page Links */
+    // Episode Page Links
     var rows = PageUtils.getNameLinkRows($)
     var episodes = []
     for (var i = 0; i < rows.length; i++) {
