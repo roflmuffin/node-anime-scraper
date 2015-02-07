@@ -167,7 +167,7 @@ var Episode = function (name, pageUrl) {
  * Fetches videoUrl information of an episode
  * @return {promise}
  */
-Episode.getVideoUrl = function () {
+Episode.prototype.getVideoUrl = function () {
   var deferred = Q.defer()
   var self = this
 
@@ -196,7 +196,7 @@ var Anime = function (name, url) {
  * Fetches videoUrls for every episode
  * @return {promise}
  */
-Anime.getVideoUrls = function () {
+Anime.prototype.getVideoUrls = function () {
   var deferred = Q.defer()
   async.map(this.episodes, function (episode, callback) {
     episode.getVideoUrl().then(function () {
@@ -217,7 +217,7 @@ Anime.getVideoUrls = function () {
  * @param  {string} name Name of the anime to search for
  * @return {promise}
  */
-Anime.fromName = function (name) {
+Anime.prototype.fromName = function (name) {
   var deferred = Q.defer()
   AnimeUtils.searchByName(name).then(function (results) {
     for (var i = 0; i < results.length; i++) {
@@ -241,7 +241,7 @@ Anime.fromName = function (name) {
  * @param  {string} pageUrl The URL to the anime page
  * @return {promise}
  */
-Anime.fromUrl = function (pageUrl) {
+Anime.prototype.fromUrl = function (pageUrl) {
   var deferred = Q.defer()
   got(pageUrl, function (err, data, resp) {
     if (err) deferred.reject(new Error('Connection timeout'))
