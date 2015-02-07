@@ -3,19 +3,19 @@ Scrapes information from KissAnime.com to get anime, episode &amp; video informa
 
 ## Introduction
 
-```
-var Anime = require('anime-scraper').Anime;
+```js
+var Anime = require('anime-scraper').Anime
 
-Anime.fromName('Haikyuu!!').then(function(anime) {
-  console.log(anime);
+Anime.fromName('Haikyuu!!').then(function (anime) {
+  console.log(anime)
   
-  anime.episodes[0].getVideoUrl().then(function(urls) {
-    console.log(urls);
-  });
-});
+  anime.episodes[0].getVideoUrl().then(function (urls) {
+    console.log(urls)
+  })
+})
 ```
 ## Outputs
-```
+```json
 {
     "names": [
         "High Kyuu!!",
@@ -37,7 +37,7 @@ Anime.fromName('Haikyuu!!').then(function(anime) {
 }
 ```
 
-```
+```json
 [
     {
         "name": "1080p",
