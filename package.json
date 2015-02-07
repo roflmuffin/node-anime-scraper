@@ -1,0 +1,22 @@
+{
+  "name": "anime-scraper",
+  "version": "1.0.0",
+  "description": "Scrapes information from KissAnime.com to get Anime, Episode & Video information & urls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "anime",
+    "scraper",
+    "async"
+  ],
+  "author": "Michael Wilson <shortguy014@gmail.com> (roflmuff.in)",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^0.9.0",
+    "cheerio": "^0.18.0",
+    "got": "^2.4.0",
+    "q": "^1.1.2"
+  }
+}
