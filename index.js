@@ -161,25 +161,25 @@ var PageUtils = {
 var Episode = function (name, pageUrl) {
   this.name = name
   this.pageUrl = pageUrl
-}
 
-/**
- * Fetches videoUrl information of an episode
- * @return {promise}
- */
-Episode.getVideoUrl = function () {
-  var deferred = Q.defer()
-  var self = this
+  /**
+   * Fetches videoUrl information of an episode
+   * @return {promise}
+   */
+  this.getVideoUrl = function () {
+    var deferred = Q.defer()
+    var self = this
 
-  got(this.pageUrl, function (err, data, resp) {
-    if (err) deferred.reject(new Error('Page could not be loaded'))
-    var $ = cheerio.load(data)
+    got(this.pageUrl, function (err, data, resp) {
+      if (err) deferred.reject(new Error('Page could not be loaded'))
+      var $ = cheerio.load(data)
 
-    self.videoUrls = PageUtils.getQualityLinkList($)
-    deferred.resolve(self.videoUrls)
-  })
+      self.videoUrls = PageUtils.getQualityLinkList($)
+      deferred.resolve(self.videoUrls)
+    })
 
-  return deferred.promise
+    return deferred.promise
+  }
 }
 
 /**
@@ -190,25 +190,25 @@ Episode.getVideoUrl = function () {
 var Anime = function (name, url) {
   this.name = name
   this.url = url
-}
 
-/**
- * Fetches videoUrls for every episode
- * @return {promise}
- */
-Anime.getVideoUrls = function () {
-  var deferred = Q.defer()
-  async.map(this.episodes, function (episode, callback) {
-    episode.getVideoUrl().then(function () {
-      callback(null, episode)
+  /**
+   * Fetches videoUrls for every episode
+   * @return {promise}
+   */
+  this.getVideoUrls = function () {
+    var deferred = Q.defer()
+    async.map(this.episodes, function (episode, callback) {
+      episode.getVideoUrl().then(function () {
+        callback(null, episode)
+      })
+    },
+    function (err, results) {
+      if (err) deferred.reject(new Error('Video links could not be loaded'))
+      deferred.resolve(results)
     })
-  },
-  function (err, results) {
-    if (err) deferred.reject(new Error('Video links could not be loaded'))
-    deferred.resolve(results)
-  })
 
-  return deferred.promise
+    return deferred.promise
+  }
 }
 
 /**
