@@ -1,58 +1,85 @@
-# Node Anime Scraper
+Node Anime Scraper
+===================
 Scrapes information from KissAnime.com to get anime, episode &amp; video information &amp; urls.
 
-## Introduction
+Anime-scraper is a module that provides an easy way to scrape KissAnime.com for anime information, including foreign names, genres & airdates as well as a brief summary.
+On top of this, it is also possible to retrieve an animes list of episodes, as well as get their direct video links in a variety of qualities where available.
 
+## Examples
+
+#### Retrieve anime information of anime named 'Sword Art Online II'
 ```js
 var Anime = require('anime-scraper').Anime
 
+// Searches for anime using a POST request & gets information.
+Anime.fromName('Sword Art Online II').then(function (anime) {
+  console.log(anime.info)  
+})
+```
+
+#### Retrieve video links to first episode of anime named 'Haikyuu'
+```js
 Anime.fromName('Haikyuu!!').then(function (anime) {
-  console.log(anime)
+  console.log(anime.info)
   
+  // Retrieve videolinks from episode page.
   anime.episodes[0].getVideoUrl().then(function (urls) {
     console.log(urls)
   })
 })
 ```
-## Outputs
-```json
-{
-    "names": [
-        "High Kyuu!!",
-        " ハイキュー!!",
-        " Haikyu!!"
-    ],
-    "genres": [
-        "Comedy",
-        "Drama",
-        "School",
-        "Shounen",
-        "Sports"
-    ],
-    "airdates": [
-        "Apr 6, 2014",
-        "Sep 21, 2014"
-    ],
-    "summary": "A chance event triggered Shouyou Hinata's love for volleyball. His club had no members, but somehow persevered and finally made it into its very first and final regular match of middle school, where it was steamrolled by Tobio Kageyama, a superstar player known as \"King of the Court.\" Vowing revenge, Hinata applied to the Karasuno High School volleyball club... only to come face-to-face with his hated rival, Kageyama! A tale of hot-blooded youth and volleyball from the pen of Haruichi Furudate!!"
-}
+
+#### Retrieve all episode video data for anime named 'Yoru no Yatterman'
+```js
+Anime.fromName('Yoru no Yatterman').then(function(anime) {
+  anime.getVideoUrls().then(function(results) {
+    console.log(results)
+  })
+})
 ```
 
-```json
-[
-    {
-        "name": "1080p",
-        "url": "https://redirector.googlevideo.com/videoplayback?requiressl=yes&shardbypass=yes&cmbypass=yes&id=ba7c0db28a7ba47f&itag=37&source=picasa&cmo=secure_transport=yes&ip=0.0.0.0&ipbits=0&expire=1425440950&sparams=requiressl,shardbypass,cmbypass,id,itag,source,ip,ipbits,expire&signature=B550EB1CB89B9471175F2B71BB47F9A1200EB065.A9920AB3DC8863B12956D240B42FFFC185757EF7&key=lh1"
-    },
-    {
-        "name": "720p",
-        "url": "https://redirector.googlevideo.com/videoplayback?requiressl=yes&shardbypass=yes&cmbypass=yes&id=ba7c0db28a7ba47f&itag=22&source=picasa&cmo=secure_transport=yes&ip=0.0.0.0&ipbits=0&expire=1425440950&sparams=requiressl,shardbypass,cmbypass,id,itag,source,ip,ipbits,expire&signature=8A5922708D5252D9600E4D2E7776A06AC283FC17.4F4C51F64F7179DCD85C9F9B05E9A8E927D36F22&key=lh1"
-    },
-    {
-        "name": "360p",
-        "url": "https://redirector.googlevideo.com/videoplayback?requiressl=yes&shardbypass=yes&cmbypass=yes&id=ba7c0db28a7ba47f&itag=18&source=picasa&cmo=secure_transport=yes&ip=0.0.0.0&ipbits=0&expire=1425440950&sparams=requiressl,shardbypass,cmbypass,id,itag,source,ip,ipbits,expire&signature=9E457C8B3501D62E67E31FEE59E336380A17F80.D2AEB76EB039DB58EE105F7B0491BC7027526499&key=lh1"
-    }
-]
+### Get Anime from KissAnime URL
+**NOTE**: This is much faster than instantiating using fromName as you do not have to make a POST request (1 request instead of 2).
+```js
+Anime.fromUrl('http://kissanime.com/Anime/Naruto-Shippuuden').then(function(anime) {
+  console.log(anime)
+})
 ```
+
+### Get list of all animes available on KissAnime.com
+```js
+var AnimeUtils = require('anime-scraper').AnimeUtils
+
+AnimeUtils.searchByName('').then(function(results) {
+    console.log(results);
+})
+```
+##### Output
+```json
+{
+  [
+    {
+      "name" : ".hack//G.U. Returner",
+      "url" : "http://kissanime.com/Anime/hack-G-U-Returner" 
+    },
+    {
+      "name" : ".hack//G.U. Trilogy",
+      "url" : "http://kissanime.com/Anime/hack-G-U-Trilogy" 
+    }
+  ]
+}
+```
+### Suggested Usage
+Due to the nature of having to post 2 requests if you want to search by name, it is instead suggested that you maintain a cached version of all anime using:
+```js
+  AnimeUtils.searchByName('')
+```
+and then using: 
+```js
+Anime.fromUrl()
+```
+to instantiate your anime object.
+
 
 ## Install
 ```
