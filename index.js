@@ -103,6 +103,8 @@ var PageUtils = {
     $('#selectQuality > option').each(function (index) {
       var name = $(this).text()
       var url = $(this).attr('value')
+      var buf = new Buffer(url, 'base64')
+      url = buf.toString('utf-8')
       arr.push({name: name, url: url})
     })
 
