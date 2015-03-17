@@ -19,11 +19,13 @@ var AnimeUtils = {
   searchByName: function (name) {
     var deferred = Q.defer()
     var url = WEBSITE_ROOT + '/AdvanceSearch'
+    var body = 'animeName=' + name + '&status=&genres='
     var options = {
       method: 'POST',
-      body: 'animeName=' + name + '&status=&genres=',
+      body: body,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': body.length
       }
     }
 
