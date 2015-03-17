@@ -1,6 +1,6 @@
 {
   "name": "anime-scraper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Scrapes information from KissAnime.com to get Anime, Episode & Video information & urls.",
   "main": "index.js",
   "scripts": {
