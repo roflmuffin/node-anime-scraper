@@ -2,6 +2,9 @@ Node Anime Scraper
 ===================
 Scrapes information from KissAnime.com to get anime, episode &amp; video information &amp; urls.
 
+## NOT FUNCTIONAL
+As of right now this module does not work due to the fact that KissAnime now uses CloudFlare on every request.
+
 Anime-scraper is a module that provides an easy way to scrape KissAnime.com for anime information, including foreign names, genres & airdates as well as a brief summary.
 On top of this, it is also possible to retrieve an animes list of episodes, as well as get their direct video links in a variety of qualities where available.
 
