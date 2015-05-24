@@ -6,10 +6,26 @@ var got = require('got')
 var cheerio = require('cheerio')
 var Q = require('q')
 var async = require('async')
+var _ = require('underscore')
 
 var WEBSITE_ROOT = 'http://kissanime.com'
 
+var OPTIONS = {
+  headers: {
+    'Cookie': '',
+    'User-Agent': 'Ubuntu Chromium/34.0.1847.116 Chrome/34.0.1847.116 Safari/537.36'
+  }
+}
+
 var AnimeUtils = {
+
+  /**
+   * Sets the cookie used by all future request (needed to bypass cloudflare)
+   * @param {string} cookie string used in headers
+   */
+  setSessionCookie: function(cookie) {
+    OPTIONS.headers['Cookie'] = cookie
+  },
 
   /**
    * Sends a POST request to KissAnime and expects a HTML response. Empty name parameter returns entire list of anime.
@@ -20,14 +36,16 @@ var AnimeUtils = {
     var deferred = Q.defer()
     var url = WEBSITE_ROOT + '/AdvanceSearch'
     var body = 'animeName=' + name + '&status=&genres='
+
     var options = {
       method: 'POST',
-      body: body,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': body.length
-      }
+      body: body
     }
+
+    options = _.extend(options, OPTIONS)
+
+    options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    options.headers['Content-Length'] = body.length
 
     got(url, options, function (err, data, resp) {
       // Handle server not found & unauthorized error codes
@@ -174,7 +192,7 @@ var Episode = function (name, pageUrl) {
     var deferred = Q.defer()
     var self = this
 
-    got(this.pageUrl, function (err, data, resp) {
+    got(this.pageUrl, OPTIONS, function (err, data, resp) {
       if (err) deferred.reject(new Error('Page could not be loaded'))
       var $ = cheerio.load(data)
 
@@ -247,8 +265,12 @@ Anime.fromName = function (name) {
  */
 Anime.fromUrl = function (pageUrl) {
   var deferred = Q.defer()
-  got(pageUrl, function (err, data, resp) {
-    if (err) deferred.reject(new Error('Connection timeout'))
+  got(pageUrl, OPTIONS, function (err, data, resp) {
+    if (err && err.code == 503) {
+      deferred.reject(new Error('Connection failed. \
+      Is the website up & have you set the cloudflare session cookie?'))
+    }
+    else if (err) deferred.reject(new Error('Connection timeout'))
     var $ = cheerio.load(data)
 
     // We must keep track of the summary text index because it is an arbitrary tag one after

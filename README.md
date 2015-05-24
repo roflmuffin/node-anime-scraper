@@ -2,11 +2,33 @@ Node Anime Scraper
 ===================
 Scrapes information from KissAnime.com to get anime, episode &amp; video information &amp; urls.
 
-## NOT FUNCTIONAL
-As of right now this module does not work due to the fact that KissAnime now uses CloudFlare on every request.
-
 Anime-scraper is a module that provides an easy way to scrape KissAnime.com for anime information, including foreign names, genres & airdates as well as a brief summary.
 On top of this, it is also possible to retrieve an animes list of episodes, as well as get their direct video links in a variety of qualities where available.
+
+Currently KissAnime is using CloudFlare protection service which makes scraping difficult,
+and as a result, anime-scraper now requires a CloudFlare cookie string to be set before
+any requests can be made.
+
+#### Setting Session Cookie String
+```js
+var AnimeUtils = require('anime-scraper').AnimeUtils
+
+var cookieString = '__cfduid=dff461762a5b0e6405a676b2d8ff7042d1432462170; cf_clearance=2ae261418c356fecf3c7535cf9d30df2b7604bc5-1432462177-604800'
+AnimeUtils.setSessionCookie(cookieString)
+```
+
+#### How do I retrieve the CloudFlare Session Cookie?
+I recommend using codemankis [Cloudscraper package](https://github.com/codemanki/cloudscraper)
+to get a session cookie for use with anime-scraper. Simply use as follows:
+
+```js
+cloudscraper.get('http://kissanime.com', function(err, body, resp) {
+  var cookieString = resp.request.headers.cookie
+  AnimeUtils.setSessionCookie(cookieString)
+
+  // You are now free to use any of the examples below!
+});
+```
 
 ## Examples
 
@@ -24,7 +46,7 @@ Anime.fromName('Sword Art Online II').then(function (anime) {
 ```js
 Anime.fromName('Haikyuu!!').then(function (anime) {
   console.log(anime.info)
-  
+
   // Retrieve videolinks from episode page.
   anime.episodes[0].getVideoUrl().then(function (urls) {
     console.log(urls)
@@ -63,11 +85,11 @@ AnimeUtils.searchByName('').then(function(results) {
   [
     {
       "name" : ".hack//G.U. Returner",
-      "url" : "http://kissanime.com/Anime/hack-G-U-Returner" 
+      "url" : "http://kissanime.com/Anime/hack-G-U-Returner"
     },
     {
       "name" : ".hack//G.U. Trilogy",
-      "url" : "http://kissanime.com/Anime/hack-G-U-Trilogy" 
+      "url" : "http://kissanime.com/Anime/hack-G-U-Trilogy"
     }
   ]
 }
@@ -77,7 +99,7 @@ Due to the nature of having to post 2 requests if you want to search by name, it
 ```js
   AnimeUtils.searchByName('')
 ```
-and then using: 
+and then using:
 ```js
 Anime.fromUrl()
 ```
