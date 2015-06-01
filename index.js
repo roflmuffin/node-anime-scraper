@@ -297,10 +297,10 @@ Anime.fromUrl = function (pageUrl) {
     // Anime Name
     var animeName = $('.bigChar').first().text()
 
-    // Episode Page Links
+    // Episode Page Links, in reverse order of HTML
     var rows = PageUtils.getNameLinkRows($)
     var episodes = []
-    for (var i = 0; i < rows.length; i++) {
+    for (var i = rows.length - 1; i >= 0; i--) {
       var name = rows[i].text
       var url = rows[i].href
       episodes.push(new Episode(name, url))
