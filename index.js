@@ -45,7 +45,7 @@ var AnimeUtils = {
     options = _.extend(OPTIONS, options)
 
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    options.headers['Content-Length'] = body.length
+    options.headers['Content-Length'] = Buffer.byteLength(body)
 
     got(url, options, function (err, data, resp) {
       // Handle server not found & unauthorized error codes
