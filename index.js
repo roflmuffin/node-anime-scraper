@@ -42,7 +42,7 @@ var AnimeUtils = {
       body: body
     }
 
-    options = _.extend(options, OPTIONS)
+    options = _.extend(OPTIONS, options)
 
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     options.headers['Content-Length'] = body.length
