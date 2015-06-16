@@ -253,6 +253,9 @@ Anime.fromName = function (name) {
         })
       }
     }
+    var error = new Error("Exact match not found. See matches property.")
+    error.matches = results
+    deferred.reject(error)
   })
 
   return deferred.promise
