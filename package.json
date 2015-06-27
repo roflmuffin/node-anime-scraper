@@ -28,8 +28,9 @@
     "underscore": "*"
   },
   "devDependencies": {
+    "cloudscraper": "^1.1.2",
+    "expect.js": "^0.3.1",
     "mocha": "^2.2.5",
-    "should": "^7.0.1",
     "standard": "^2.4.5"
   }
 }
