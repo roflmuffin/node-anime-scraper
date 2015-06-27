@@ -4,7 +4,7 @@
   "description": "Scrapes information from KissAnime.com to get Anime, Episode & Video information & urls.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "standard && node index.js"
+    "test": "mocha test/*.js"
   },
   "keywords": [
     "anime",
