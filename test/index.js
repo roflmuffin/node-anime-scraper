@@ -6,6 +6,7 @@ var Anime = scraper.Anime
 var AnimeUtils = scraper.AnimeUtils
 
 var ANIME_NAME = 'Yoru no Yatterman'
+var ANIME_NAME_DOT = 'Gangsta.'
 var ANIME_NAME_UNICODE = 'Space☆Dandy (Sub)'
 
 before('anime-scraper', function(done) {
@@ -18,7 +19,6 @@ before('anime-scraper', function(done) {
 })
 
 // Once we have our CloudFlare stuff out of the way, continue with the test.
-
 describe('anime-scraper', function() {
   describe('AnimeUtils.searchByName', function() {
     describe('with blank string', function() {
@@ -62,7 +62,21 @@ describe('anime-scraper', function() {
           .catch(function(error){
             callback(error)
           })
-      })     
+      })    
+
+    })
+
+    describe('with dot in name name: ' + ANIME_NAME_DOT, function() {
+      this.timeout(10000)
+      it('should return an anime object', function(callback) {
+        Anime.fromName(ANIME_NAME_DOT)
+          .then(function(anime) {
+            callback()
+          })
+          .catch(function(error){
+            callback(error)
+          })
+      })    
 
     })
 
