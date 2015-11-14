@@ -1,4 +1,4 @@
-var expect = require('expect.js')
+\var expect = require('expect.js')
 var scraper = require('../lib/index.js')
 var cloudscraper = require('cloudscraper')
 
@@ -6,7 +6,7 @@ var Anime = scraper.Anime
 var AnimeUtils = scraper.AnimeUtils
 
 var ANIME_NAME = 'Yoru no Yatterman'
-var ANIME_NAME_DOT = 'Gangsta.'
+var ANIME_NAME_MULTIPLE = 'Akame ga Kill!'
 var ANIME_NAME_UNICODE = 'Space☆Dandy (Sub)'
 
 before('anime-scraper', function(done) {
@@ -66,10 +66,10 @@ describe('anime-scraper', function() {
 
     })
 
-    describe('with dot in name name: ' + ANIME_NAME_DOT, function() {
+    describe('with multiple results: ' + ANIME_NAME_MULTIPLE, function() {
       this.timeout(10000)
       it('should return an anime object', function(callback) {
-        Anime.fromName(ANIME_NAME_DOT)
+        Anime.fromName(ANIME_NAME_MULTIPLE)
           .then(function(anime) {
             callback()
           })
