@@ -1,4 +1,4 @@
-\var expect = require('expect.js')
+var expect = require('expect.js')
 var scraper = require('../lib/index.js')
 var cloudscraper = require('cloudscraper')
 
