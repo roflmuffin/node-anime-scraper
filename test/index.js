@@ -31,7 +31,7 @@ describe('anime-scraper', function() {
           .catch(function(error) {
             callback(error)
           })
-      })      
+      })
     })
 
     describe('with anime name', function() {
@@ -62,21 +62,24 @@ describe('anime-scraper', function() {
           .catch(function(error){
             callback(error)
           })
-      })    
+      })
 
     })
 
     describe('with multiple results: ' + ANIME_NAME_MULTIPLE, function() {
       this.timeout(10000)
-      it('should return an anime object', function(callback) {
+      it('should return an an error with matches array, length > 1', function(callback) {
         Anime.fromName(ANIME_NAME_MULTIPLE)
           .then(function(anime) {
             callback()
           })
           .catch(function(error){
-            callback(error)
+            if (error.matches.length > 1)
+              callback()
+            else
+              callback(error)
           })
-      })    
+      })
 
     })
 
