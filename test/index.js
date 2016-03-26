@@ -27,6 +27,8 @@ describe('anime-scraper', function() {
       it('returns a large array', function(callback) {
         AnimeUtils.searchByName('')
           .then(function(results) {
+            expect(results).to.be.an('array')
+            expect(results.length).to.be.above(150)
             callback()
           })
           .catch(function(error) {
@@ -40,12 +42,26 @@ describe('anime-scraper', function() {
       it('returns an array with one object', function(callback) {
         AnimeUtils.searchByName(ANIME_NAME)
           .then(function(results) {
-            if (results.length == 1)
-              callback()
-            else
-              callback(new Error('Invalid anime count'))
+            expect(results).to.be.an('array')
+            expect(results.length).to.be(1)
+            callback()
           })
           .catch(function(error) {
+            callback(error)
+          })
+      })
+    })
+
+    describe('with multiple results: ' + ANIME_NAME_MULTIPLE, function() {
+      this.timeout(10000)
+      it('returns an array with more than one object', function(callback) {
+        AnimeUtils.searchByName(ANIME_NAME_MULTIPLE)
+          .then(function (results) {
+            expect(results).to.be.an('array')
+            expect(results.length).to.be.greaterThan(1)
+            callback()
+          })
+          .catch(function (error) {
             callback(error)
           })
       })
@@ -58,6 +74,7 @@ describe('anime-scraper', function() {
       it('should return an anime object', function(callback) {
         Anime.fromName(ANIME_NAME)
           .then(function(anime) {
+            expect(anime).to.be.an(Anime)
             callback()
           })
           .catch(function(error){
@@ -88,11 +105,27 @@ describe('anime-scraper', function() {
       it('should return an anime object', function(callback) {
         Anime.fromName(ANIME_NAME_UNICODE)
           .then(function(anime) {
+            expect(anime).to.be.an(Anime)
             callback()
           })
           .catch(function(error){
             callback(error)
           })
+      })
+    })
+  })
+
+  describe('Anime.fromUrl', function() {
+    describe('with anime url: ' + ANIME_URL, function() {
+      it('should return an anime object', function (callback) {
+          Anime.fromUrl(ANIME_URL)
+            .then(function (anime) {
+              expect(anime).to.be.an(Anime)
+              callback()
+            })
+            .catch(function (error) {
+              callback(error)
+            })
       })
     })
   })
@@ -103,11 +136,10 @@ describe('anime-scraper', function() {
       it('should return a list of video URLs', function(callback) {
         Anime.fromUrl(ANIME_URL)
           .then(function(anime) {
+            expect(anime.episodes.length).to.be.above(0)
             anime.episodes[0].getVideoUrl().then(function (urls) {
-              if (urls.length < 1)
-                callback(new Error('No urls found'))
-              else
-                callback()
+              expect(urls.length).to.be.greaterThan(0)
+              callback()
             })
           })
           .catch(function(error) {
