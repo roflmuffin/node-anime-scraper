@@ -78,7 +78,7 @@ describe('anime-scraper', function() {
             if (typeof error.matches !== 'undefined')
               callback()
             else
-              callback()
+              callback(error)
           })
       })
     })
