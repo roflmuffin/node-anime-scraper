@@ -22,7 +22,7 @@ I recommend using codemankis [Cloudscraper package](https://github.com/codemanki
 to get a session cookie for use with anime-scraper. Simply use as follows:
 
 ```js
-cloudscraper.get('http://kissanime.com', function(err, body, resp) {
+cloudscraper.get('http://kissanime.com', function(err, resp, body) {
   var cookieString = resp.request.headers.cookie
   AnimeUtils.setSessionCookie(cookieString)
 
