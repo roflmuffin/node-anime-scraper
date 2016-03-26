@@ -8,6 +8,7 @@ var AnimeUtils = scraper.AnimeUtils
 var ANIME_NAME = 'Yoru no Yatterman'
 var ANIME_NAME_MULTIPLE = 'Akame ga Kill!'
 var ANIME_NAME_UNICODE = 'Space☆Dandy (Sub)'
+var ANIME_URL = 'https://kissanime.to/Anime/Boku-dake-ga-Inai-Machi'
 
 before('anime-scraper', function(done) {
   this.timeout(10000)
@@ -31,7 +32,7 @@ describe('anime-scraper', function() {
           .catch(function(error) {
             callback(error)
           })
-      })      
+      })
     })
 
     describe('with anime name', function() {
@@ -62,22 +63,24 @@ describe('anime-scraper', function() {
           .catch(function(error){
             callback(error)
           })
-      })    
+      })
 
     })
 
     describe('with multiple results: ' + ANIME_NAME_MULTIPLE, function() {
       this.timeout(10000)
-      it('should return an anime object', function(callback) {
+      it('should return an error with \'matches\' property', function(callback) {
         Anime.fromName(ANIME_NAME_MULTIPLE)
           .then(function(anime) {
             callback()
           })
           .catch(function(error){
-            callback(error)
+            if (typeof error.matches !== 'undefined')
+              callback()
+            else
+              callback()
           })
-      })    
-
+      })
     })
 
     describe('with unicode character: ' + ANIME_NAME_UNICODE, function() {
@@ -88,6 +91,26 @@ describe('anime-scraper', function() {
             callback()
           })
           .catch(function(error){
+            callback(error)
+          })
+      })
+    })
+  })
+
+  describe('Episode.getVideoUrl', function() {
+    describe('retrieve video URLs', function() {
+      this.timeout(10000)
+      it('should return a list of video URLs', function(callback) {
+        Anime.fromUrl(ANIME_URL)
+          .then(function(anime) {
+            anime.episodes[0].getVideoUrl().then(function (urls) {
+              if (urls.length < 1)
+                callback(new Error('No urls found'))
+              else
+                callback()
+            })
+          })
+          .catch(function(error) {
             callback(error)
           })
       })
