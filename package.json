@@ -1,0 +1,23 @@
+{
+  "name": "anime-scraper",
+  "version": "2.0.0",
+  "description": "Scrapes information from KissAnime.com to get Anime, Episode & Video information & urls.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.3.3",
+    "cheerio": "^0.20.0",
+    "cloudscraper": "^1.2.1",
+    "debug": "^2.2.0",
+    "got": "^6.1.1",
+    "lodash": "^4.5.1",
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.2.5",
+  },
+  "author": "",
+  "license": "ISC"
+}
