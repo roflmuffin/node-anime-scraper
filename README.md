@@ -1,5 +1,10 @@
 Node Anime Scraper
 ===================
+
+Please see the [migration document](https://github.com/roflmuffin/node-anime-scraper/blob/v2/MIGRATION.md) for more v2 information.
+
+***
+
 Scrapes information from KissAnime.com to get anime, episode &amp; video information &amp; urls.
 
 Anime-scraper is a module that provides an easy way to scrape KissAnime.com for anime information, including foreign names, genres & airdates as well as a brief summary.
