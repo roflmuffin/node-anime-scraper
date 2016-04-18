@@ -65,7 +65,7 @@ Anime.fromUrl('https://kissanime.to/Anime/Naruto-Shippuuden').then(function(anim
 ### Suggested Usage
 Due to the nature of having to post 2 requests if you want to search by name, a suggestion is to maintain a cached version of all anime using:
 ```js
-  Anime.search('')
+Anime.search('')
 ```
 and then using:
 ```js
