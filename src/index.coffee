@@ -126,6 +126,13 @@ class Anime
 
       return search_results
 
+  @fromName: (query) ->
+    Anime.search(query).then (results) ->
+      if results.length > 0
+        return results[0].toAnime()
+      else
+        throw new Error('No anime found by that name.')        
+
   fetchAllEpisodes: ->
     Promise.map @episodes, (episode) ->
       return episode.fetch()

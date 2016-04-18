@@ -13,6 +13,9 @@ var ANIME_SEARCH_LARGERESULT = 'Naruto'
 var ANIME_SEARCH_NORESULT = 'Absolute Gibberish'
 var ANIME_SEARCH_UNICODE = 'Space☆Dandy'
 
+var ANIME_FROMNAME_HASRESULT = 'Haikyuu'
+var ANIME_FROMNAME_NORESULT = 'Absolute Gibberish'
+
 var ANIME_EPISODES_SMALL = 'https://kissanime.to/Anime/The-Garden-of-Words'
 var ANIME_EPISODES_MEDIUM = 'https://kissanime.to/Anime/Boku-dake-ga-Inai-Machi'
 
@@ -79,6 +82,26 @@ describe('Anime', function() {
           expect(results[0]).to.be.a(SearchResult)
           callback()
         }).catch(callback)
+      })
+    })
+  })
+
+  describe('Anime.fromName', function() {
+    describe('with results', function() {
+      it('should return the first result', function(callback) {
+        Anime.fromName(ANIME_FROMNAME_HASRESULT).then(function(anime) {
+          expect(anime).to.be.an(Anime)
+          callback()
+        })
+      })
+    })
+
+    describe('with no results', function() {
+      it('should return an error', function(callback) {
+        Anime.fromName(ANIME_FROMNAME_NORESULT).then(function(anime) {})
+        .catch(function(error) {
+          callback()
+        })
       })
     })
   })
