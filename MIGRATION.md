@@ -15,7 +15,7 @@ Most (if not all) of the modules objects are now packaged inside of classes.
 - SearchResult
 - Video
 
-The names of properties have also been changed in the majority of these classes for greater clarity.
+A few names of properties have also been changed in these classes for greater clarity.
 
 #### Old vs New Structure
 The method & variable names displayed on the right hand side are the new names
