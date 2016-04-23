@@ -25,7 +25,7 @@ Anime: {
   name: name
   url: url
   episodes: episodes
-  info.names : summary
+  info.names : names
   info.genres : genres
   info.summary : summary
   info.airdates: -
