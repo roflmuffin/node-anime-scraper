@@ -72,9 +72,10 @@ class Episode
         throw new Error('Invalid episode/not released.')
       debug page
       return new Episode
+        anime_name: page._$("#navsubbar a").text().replace("Anime", "").replace("information", "").trim()
+        anime_url: page._$("#navsubbar a").attr('href')
         name: page._$("meta[name='keywords']").attr('content').split(',')[0]
         url: url
-        anime_name: page._$("#navsubbar a").text().replace("Anime", "").replace("information", "").trim()
         video_links: page.getQualityList().map (row) -> return new Video(row)
 
   fetch: ->
