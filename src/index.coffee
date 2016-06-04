@@ -64,7 +64,7 @@ class SearchResult
 
 class Episode
   constructor: (obj) ->
-    {@name, @url, @video_links, @anime_name, @anime_url} = obj
+    {@name, @url, @video_links, @anime_name, @anime_url, @alt} = obj
 
   @fromUrl: (url) ->
     KissPage.fromUrl(url).then (page) ->
