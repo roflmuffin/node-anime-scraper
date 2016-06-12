@@ -15,6 +15,7 @@ var ANIME_SEARCH_UNICODE = 'Space☆Dandy'
 
 var ANIME_FROMNAME_HASRESULT = 'Haikyuu'
 var ANIME_FROMNAME_NORESULT = 'Absolute Gibberish'
+var ANIME_FROMNAME_EMAILPROTECTED = 'The iDOLM@STER'
 
 var ANIME_EPISODES_SMALL = 'https://kissanime.to/Anime/The-Garden-of-Words'
 var ANIME_EPISODES_MEDIUM = 'https://kissanime.to/Anime/Boku-dake-ga-Inai-Machi'
@@ -93,6 +94,16 @@ describe('Anime', function() {
           expect(anime).to.be.an(Anime)
           callback()
         })
+      })
+    })
+
+    describe('with email protected names', function() {
+      it('should return a valid name', function(callback) {
+        Anime.fromName(ANIME_FROMNAME_EMAILPROTECTED).then(function(anime) {
+          expect(anime).to.be.an(Anime)
+          expect(anime.name).to.not.contain('protected]')
+          callback()
+        }).catch(function(err) {callback(err)})
       })
     })
 
