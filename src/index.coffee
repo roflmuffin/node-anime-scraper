@@ -3,6 +3,7 @@ debug = require('debug')('scraper')
 cheerio = require 'cheerio'
 Bottleneck = require 'bottleneck'
 KissHTTP = require './http-wrapper'
+_ = require 'lodash'
 
 KISS_URL = 'https://kissanime.to'
 
@@ -11,7 +12,20 @@ b = new Bottleneck(0, 500)
 
 class KissPage
   constructor: (@url, @_buffer) ->
+    @cleanEmails()
     @_$ = cheerio.load(@_buffer)
+
+  cleanEmails: ->
+    # Required to remove the [email protected] of CloudFlare that incorrectly
+    # obfuscates animes with an @ symbol in their name
+    pattern = /<span class="__cf_email__.+data-cfemail="([\w\d]+).+<\/script>/g
+    @_buffer= _.replace @_buffer, pattern, (_, a) ->
+      # Below code taken directly from Cloudflares email unhashing algorithm.
+      e = ''; r = '0x' + a.substr(0, 2) | 0; n = 2
+      while a.length - n
+        e += '%' + ('0' + ('0x' + a.substr(n, 2) ^ r).toString(16)).slice(-2)
+        n += 2
+      return decodeURIComponent(e)
 
   getTableRows: ->
     arr = []
