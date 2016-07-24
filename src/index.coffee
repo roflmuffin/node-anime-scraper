@@ -5,7 +5,7 @@ Bottleneck = require 'bottleneck'
 KissHTTP = require './http-wrapper'
 _ = require 'lodash'
 
-KISS_URL = 'https://kissanime.to'
+KISS_URL = 'http://kissanime.to'
 
 k = new KissHTTP()
 b = new Bottleneck(0, 500)
