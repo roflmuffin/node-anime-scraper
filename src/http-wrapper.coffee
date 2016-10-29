@@ -3,6 +3,7 @@ debug = require('debug')('test')
 Promise = require 'bluebird'
 cloudscraper = Promise.promisifyAll(require 'cloudscraper')
 _ = require 'lodash'
+cheerio = require 'cheerio'
 
 KissCookie = require './cookie-storage'
 
@@ -20,24 +21,27 @@ class InvalidCFCookieError extends Error
       is no longer valid.'
     Error.captureStackTrace(this, InvalidCFCookieError)
 
-class CaptchaBlockedError extends Error
-  constructor: ->
-    @name = 'CaptchaBlockedError'
-    @message = 'You have made requests too rapidly and have been CAPTCHA blocked.'
-    Error.captureStackTrace(this, CaptchaBlockedError)
+class BlockedError extends Error
+  constructor: (reason, body) ->
+    $ = cheerio.load(body)
+    reason = $('.barContent').text()
+    @name = 'BlockedError'
+    @message = "You have been blocked, the page states:  #{reason}"
+    Error.captureStackTrace(this, BlockedError)
 
 class MaxRetryError extends Error
-    constructor: ->
-      @name = 'MaxRetryError'
-      @message = 'Retrieving page after 5 attempts failed.
-        Something has most likely been broken by external forces.'
-      Error.captureStackTrace(this, CaptchaBlockedError)
+  constructor: ->
+    @name = 'MaxRetryError'
+    @message = 'Retrieving page after 5 attempts failed.
+      Something has most likely been broken by external forces.'
+    Error.captureStackTrace(this, MaxRetryError)
 
 class KissHTTP
   DEFAULT_OPTIONS =
     method: 'GET'
     headers:
       'user-agent': 'got/6.11 (https://github.com/sindresorhus/got)'
+    followRedirect: true
     save_cookies: true
 
   constructor: (options) ->
@@ -66,11 +70,19 @@ class KissHTTP
     got(url, local_options)
       .then (resp) ->
         if resp.body.indexOf('Are you human?') > -1
-          throw new CaptchaBlockedError()
+          throw new BlockedError('Captcha Blocked', resp.body)
+        else if resp.body.indexOf('does not allow unofficial apps') > -1
+          throw new BlockedError('Blocked IP', resp.body)
         else
           return resp
       .catch (err) ->
-        if local_options.retries > 5
+        debug(err)
+        if err instanceof BlockedError
+          throw err
+        else if err.name == 'HTTPError'
+          debug("Received HTTP error retrieving URL: #{url}")
+          throw err
+        else if local_options.retries > 5
           throw new MaxRetryError()
         if err.name == 'InvalidCFCookieError'
           throw new InvalidCFCookieError()
