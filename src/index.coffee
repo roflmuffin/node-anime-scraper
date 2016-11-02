@@ -1,14 +1,12 @@
 Promise = require 'bluebird'
 debug = require('debug')('scraper')
 cheerio = require 'cheerio'
-Bottleneck = require 'bottleneck'
 KissHTTP = require './http-wrapper'
 _ = require 'lodash'
 
 KISS_URL = 'http://kissanime.to'
 
 k = new KissHTTP()
-b = new Bottleneck(0, 500)
 
 class KissPage
   constructor: (@url, @_buffer) ->
@@ -84,13 +82,17 @@ class Episode
     KissPage.fromUrl(url).then (page) ->
       if page._buffer.indexOf('has not been released yet') > -1
         throw new Error('Invalid episode/not released.')
-      debug page
-      return new Episode
+
+      ep = new Episode
         anime_name: page._$("#navsubbar a").text().replace("Anime", "").replace("information", "").trim()
         anime_url: page._$("#navsubbar a").attr('href')
         name: page._$("meta[name='keywords']").attr('content').split(',')[0]
         url: url
         video_links: page.getQualityList().map (row) -> return new Video(row)
+
+      debug('Fetched: ' + ep.name)
+
+      return ep
 
   fetch: ->
     return Episode.fromUrl(@url)
@@ -99,6 +101,9 @@ class Anime
   constructor: (obj) ->
     {@name, @url, @summary, @genres
       @names, @episodes} = obj
+
+  @setDelay: (amount) ->
+    k.setDelay(amount)
 
   @fromUrl: (url) ->
     KissPage.fromUrl(url).then (page) ->

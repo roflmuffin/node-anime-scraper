@@ -4,8 +4,10 @@ Promise = require 'bluebird'
 cloudscraper = Promise.promisifyAll(require 'cloudscraper')
 _ = require 'lodash'
 cheerio = require 'cheerio'
+Bottleneck = require 'bottleneck'
 
 KissCookie = require './cookie-storage'
+b = new Bottleneck(1, 0)
 
 class InvalidUserAgentError extends Error
   constructor: ->
@@ -26,7 +28,7 @@ class BlockedError extends Error
     $ = cheerio.load(body)
     reason = $('.barContent').text()
     @name = 'BlockedError'
-    @message = "You have been blocked, the page states:  #{reason}"
+    @message = "You have been blocked, the page states:  #{reason.trim()}"
     Error.captureStackTrace(this, BlockedError)
 
 class MaxRetryError extends Error
@@ -51,6 +53,9 @@ class KissHTTP
       @cookie_storage = new KissCookie()
       @options.headers.cookie = @cookie_storage.loadCookie()
 
+  setDelay: (amount) ->
+    b = new Bottleneck(1, amount)
+
   getFreshCookie: ->
     debug 'Retrieving fresh Cloudflare cookie.'
     return new Promise (resolve, reject) =>
@@ -67,7 +72,7 @@ class KissHTTP
 
   request: (url, options={retries: 0}) ->
     local_options = _.merge(@options, options)
-    got(url, local_options)
+    b.schedule(got, url, local_options)
       .then (resp) ->
         if resp.body.indexOf('Are you human?') > -1
           throw new BlockedError('Captcha Blocked', resp.body)
@@ -89,7 +94,7 @@ class KissHTTP
         else throw err
       .catch (err) =>
         local_options.retries += 1
-        if err.name == 'MaxRetryError'
+        if err.name == 'MaxRetryError' || err.name == 'BlockedError'
           throw err
         else
           @getFreshCookie().then =>
