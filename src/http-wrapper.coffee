@@ -59,7 +59,7 @@ class KissHTTP
   getFreshCookie: ->
     debug 'Retrieving fresh Cloudflare cookie.'
     return new Promise (resolve, reject) =>
-      cloudscraper.get 'https://kissanime.to', (err, resp) =>
+      cloudscraper.get 'https://kissanime.ru', (err, resp) =>
         if (err)
           reject(new Error('Unable to bypass Cloudflare protection.'))
         else
