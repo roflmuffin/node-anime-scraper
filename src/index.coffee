@@ -4,7 +4,7 @@ cheerio = require 'cheerio'
 KissHTTP = require './http-wrapper'
 _ = require 'lodash'
 
-KISS_URL = 'http://kissanime.to'
+KISS_URL = 'http://kissanime.ru'
 
 k = new KissHTTP()
 
