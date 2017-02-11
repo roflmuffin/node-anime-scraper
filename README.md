@@ -77,3 +77,9 @@ and then using:
 Anime.fromUrl()
 ```
 to instantiate your anime object.
+
+### Contributors
+
+Many thanks to contributors.
+
+- [van-nguyen](https://github.com/van-nguyen)
