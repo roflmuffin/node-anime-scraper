@@ -48,7 +48,7 @@ class KissPage
   getQualityList: ->
     arr = []
 
-    @_$('#selectQuality > option').each (index, value) =>
+    @_$('#slcQualix > option').each (index, value) =>
       name = @_$(value).text()
       url = @_$(value).attr('value')
       buf = new Buffer(url, 'base64')
