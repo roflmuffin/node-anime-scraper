@@ -1,1 +1,0 @@
-const got = require('got');
