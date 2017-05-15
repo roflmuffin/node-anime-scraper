@@ -105,7 +105,7 @@ KissHTTP = (function() {
     debug('Retrieving fresh Cloudflare cookie.');
     return new Promise((function(_this) {
       return function(resolve, reject) {
-        return cloudscraper.get('https://kissanime.ru', function(err, resp) {
+        return cloudscraper.get('https://ww1.gogoanime.io/', function(err, resp) {
           if (err) {
             return reject(new Error('Unable to bypass Cloudflare protection.'));
           } else {
