@@ -1,0 +1,25 @@
+{
+  "name": "anime-scraper",
+  "version": "3.0.0",
+  "description": "Scrapes information from Gogo Anime to get Anime, Episode & Video information & urls.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha test/*.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "bottleneck": "^1.15.1",
+    "cheerio": "^0.22.0",
+    "cloudscraper": "^1.4.1",
+    "got": "^6.7.1",
+    "lodash": "^4.17.4",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "author": "roflmuffin",
+  "license": "ISC"
+}
