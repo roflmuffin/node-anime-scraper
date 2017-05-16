@@ -1,38 +1,90 @@
 const cheerio = require('cheerio');
-const debug = require('debug')('anime-scraper');
-const got = require('got');
 const CloudHttp = require('../libs/http');
+const debug = require('debug')('anime-scraper');
+const html = require('./html');
+const Promise = require('bluebird');
 
 const BASE_URL = 'https://ww1.gogoanime.io';
 
 const cHttp = new CloudHttp();
 
-function bodyToCheerio(resp) {
-  return cheerio.load(resp.body);
+class Page {
+  static fromResponse(response) {
+    return cheerio.load(response.body);
+  }
+
+  static fromUrl(url, options = {}) {
+    return cHttp.request(url, options).then(Page.fromResponse);
+  }
 }
 
-function getEpisodesFromId(id) {
-  const url = 'https://ww1.gogoanime.io/load-list-episode';
-  const params = {
-    ep_start: 0,
-    ep_end: 2000,
-    id,
-  };
+class Episode {
+  constructor({ name, url, videoLinks }) {
+    this.name = name || null;
+    this.url = url || null;
+    this.videoLinks = videoLinks || null;
+  }
 
-  return cHttp.request(url, { query: params })
-  .then(bodyToCheerio)
-  .then(($) => {
-    const episodes = $('li a');
-
-    return episodes.map((i, value) => ({
-      name: $(value).find('.name').text().trim(),
-      url: `${BASE_URL}${$(value).attr('href').trim()}`,
-    })).get().reverse();
-  });
+  fetch() {
+    return Page.fromUrl(this.url).then(html.parseVideo).then((videoLinks) => {
+      this.videoLinks = videoLinks;
+    }).then(() => this);
+  }
 }
 
-const Anime = {
-  search(query) {
+class Anime {
+  constructor({ name, url, id, summary, genres, episodes }) {
+    this.name = name || null;
+    this.url = url || null;
+    this.id = id || null;
+    this.summary = summary || null;
+    this.genres = genres || null;
+    this.episodes = episodes || null;
+    debug(`Anime created: ${this}`);
+  }
+
+  fetchEpisodes() {
+    const url = 'https://ww1.gogoanime.io/load-list-episode';
+
+    const options = {
+      query: {
+        ep_start: 0,
+        ep_end: 2000,
+        id: this.id,
+      } };
+
+    return Page.fromUrl(url, options).then(html.parseEpisodeListing).then((episodes) => {
+      this.episodes = episodes.map(x => new Episode(x));
+    }).then(() => this);
+  }
+
+  fetchAllEpisodes() {
+    debug(`Fetching all episodes for anime: ${this}`);
+    return Promise.map(this.episodes, episode => episode.fetch(), { concurrency: 1 })
+    .then(() => this);
+  }
+
+  toString() {
+    return `${this.name} (${this.id}).`;
+  }
+
+  static fromName(name) {
+    return Anime.search(name).then(results => results[0]).then(Anime.fromSearchResult);
+  }
+
+  static fromPage($) {
+    return new Anime(html.parseAnimePage($)).fetchEpisodes();
+  }
+
+  static fromUrl(url) {
+    return Page.fromUrl(url).then(Anime.fromPage);
+  }
+
+  static fromSearchResult(result) {
+    return Anime.fromUrl(result.url);
+  }
+
+  static search(query) {
     const url = `${BASE_URL}/search.html`;
 
     const options = {
@@ -40,73 +92,24 @@ const Anime = {
       query: { keyword: query },
     };
 
-    return cHttp.request(url, options)
-    .then(bodyToCheerio)
-    .then(($) => {
-      const results = $('.items li .name a');
+    return Page.fromUrl(url, options).then(html.parseSearchResults);
+  }
+}
 
-      return results.map((i, value) => ({
-        name: $(value).text(),
-        url: `${BASE_URL}${$(value).attr('href')}`,
-      })).get();
-    });
-  },
+class SearchResult {
+  constructor({ name, url }) {
+    this.name = name || null;
+    this.url = url || null;
+  }
 
-  fromUrl(url) {
-    return cHttp.request(url)
-    .then(bodyToCheerio)
-    .then(($) => {
-      const id = $('#movie_id').val();
+  toAnime() {
+    return Anime.fromSearchResult(this);
+  }
+}
 
-      return getEpisodesFromId(id).then(episodes => ({
-        id: $('#movie_id').val(),
-        name: $('.anime_info_body h1').text(),
-        summary: $('span:contains("Plot Summary")').get(0).nextSibling.data,
-        genres: $("span:contains('Genre')").parent().find('a').map((i, val) => $(val).attr('title'))
-          .get(),
-        episodes,
-      }));
-    });
-  },
+module.exports = {
+  Page,
+  Anime,
+  Episode,
+  SearchResult,
 };
-
-function getVideosFromVidstreaming(url) {
-  return got(url)
-  .then(bodyToCheerio)
-  .then($ =>
-    $('video source').map((i, val) => ({
-      name: $(val).attr('label'),
-      url: $(val).attr('src'),
-    })).get());
-}
-
-function getVideoFromUrl(url) {
-  return cHttp.request(url)
-  .then(bodyToCheerio)
-  .then(($) => {
-    const vidStreaming = $('[data-video*="https://vidstreaming.io/"]').attr('data-video');
-
-    if (vidStreaming != null) {
-      return getVideosFromVidstreaming(vidStreaming);
-    }
-
-    return null;
-  });
-}
-
-// Anime.search('Haikyuu').then(results => debug(results))
-
-// Anime.fromUrl('https://ww1.gogoanime.io/category/tsugumomo').then(id => debug(id))
-
-// getVideoFromUrl('https://ww1.gogoanime.io/atom-the-beginning-episode-5').then(vid => debug(vid))
-
-// getEpisodesFromId(2477).then(eps => debug(eps))
-
-
-Anime.search('Haikyuu').then((results) => {
-  debug(results);
-  Anime.fromUrl(results[0].url).then((anime) => {
-    debug(anime);
-    getVideoFromUrl(anime.episodes[0].url).then(video => debug(video));
-  });
-});
