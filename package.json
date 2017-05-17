@@ -7,6 +7,12 @@
     "test": "ava test/**/*.test.js --verbose",
     "test-coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
+  "nyc": {
+    "exclude": [
+      "libs/**/*.js",
+      "test/**/*.js"
+    ]
+  },
   "dependencies": {
     "bluebird": "^3.5.0",
     "bottleneck": "^1.15.1",

@@ -3,6 +3,7 @@ const CloudHttp = require('../libs/http');
 const debug = require('debug')('anime-scraper');
 const html = require('./html');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 const BASE_URL = 'https://ww1.gogoanime.io';
 
@@ -62,6 +63,12 @@ class Anime {
     debug(`Fetching all episodes for anime: ${this}`);
     return Promise.map(this.episodes, episode => episode.fetch(), { concurrency: 1 })
     .then(() => this);
+  }
+
+  fetchInformation() {
+    return Anime.fromUrl(this.url).then((anime) => {
+      _.merge(this, anime);
+    }).then(() => this);
   }
 
   toString() {

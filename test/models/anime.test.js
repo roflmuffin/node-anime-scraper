@@ -15,6 +15,19 @@ test('can view by name', t => (
   })
 ));
 
+test('can create via constructor', (t) => {
+  const a = new Anime({ url: helper.TEST_ANIME_URL });
+  return a.fetchInformation().then((anime) => {
+    t.is(anime.name, helper.TEST_ANIME_NAME);
+  });
+});
+
+test('can create empty object via constructor', (t) => {
+  const sr = new Anime({});
+  t.truthy(sr.name === null);
+  t.truthy(sr.url === null);
+});
+
 test('can search', t => (
   Anime.search(helper.TEST_SEARCH_NAME).then((results) => {
     const resultsReduced = results.map(item => item.name);
