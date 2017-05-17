@@ -69,7 +69,7 @@ class Anime {
   }
 
   static fromName(name) {
-    return Anime.search(name).then(results => results[0]).then(Anime.fromSearchResult);
+    return Anime.search(name).then(results => results[0]).then(result => result.toAnime());
   }
 
   static fromPage($) {
@@ -92,7 +92,10 @@ class Anime {
       query: { keyword: query },
     };
 
-    return Page.fromUrl(url, options).then(html.parseSearchResults);
+    debug(`Running search for ${query}`);
+
+    return Page.fromUrl(url, options).then(html.parseSearchResults)
+      .then(results => results.map(x => new SearchResult(x)));
   }
 }
 
@@ -100,6 +103,7 @@ class SearchResult {
   constructor({ name, url }) {
     this.name = name || null;
     this.url = url || null;
+    debug(`Search result created: ${this.name}`);
   }
 
   toAnime() {

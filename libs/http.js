@@ -131,7 +131,7 @@ KissHTTP = (function() {
       };
     }
     local_options = _.merge(this.options, options);
-    return b.schedule(got, url, local_options).then(function(resp) {
+    return got(url, local_options).then(function(resp) {
       if (resp.body.indexOf('Are you human?') > -1) {
         throw new BlockedError('Captcha Blocked', resp.body);
       } else if (resp.body.indexOf('does not allow unofficial apps') > -1) {

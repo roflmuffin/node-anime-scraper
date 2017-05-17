@@ -7,7 +7,7 @@ const BASE_URL = 'https://ww1.gogoanime.io';
 // Search Results
 function parseSearchResults($) {
   const results = $('.items li .name a');
-
+  
   return results.map((i, value) => ({
     name: $(value).text(),
     url: `${BASE_URL}${$(value).attr('href')}`,
