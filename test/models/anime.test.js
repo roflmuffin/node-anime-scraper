@@ -28,7 +28,7 @@ test('can create empty object via constructor', (t) => {
   t.truthy(sr.url === null);
 });
 
-test('can search', t => (
+test.serial('can search', t => (
   Anime.search(helper.TEST_SEARCH_NAME).then((results) => {
     const resultsReduced = results.map(item => item.name);
     t.truthy(JSON.stringify(resultsReduced) === JSON.stringify(helper.TEST_SEARCH_RESULT));
