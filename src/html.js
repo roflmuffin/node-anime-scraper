@@ -49,7 +49,7 @@ const VideoProviders = {
 };
 
 function parseVideo($) {
-  const vidStreaming = $('[data-video*="https://vidstreaming.io/"]').attr('data-video');
+  const vidStreaming = "https:" + $('[data-video*="//vidstreaming.io/"]').attr('data-video');
   debug(`Found Vidstreaming link: ${vidStreaming}`);
 
   if (vidStreaming != null) {
