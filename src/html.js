@@ -33,6 +33,7 @@ function parseAnimePage($) {
     summary: $('span:contains("Plot Summary")').get(0).nextSibling.data,
     genres: $("span:contains('Genre')").parent().find('a').map((i, val) => $(val).attr('title'))
       .get(),
+    released: $("span:contains('Released')").get(0).nextSibling.data
   };
 }
 
@@ -44,7 +45,11 @@ const VideoProviders = {
         $('.linkserver').map((i, val) => {
           val = $(val);
           var source = val.attr('data-video');
-          var type = "iframe"
+          var out = {
+            name: val.text(),
+            url: source,
+            type: "iframe"
+          }
           if (!source && val.hasClass("active")) {
             $('script').each((i, el) => {
               var html = $(el).html();
@@ -54,37 +59,59 @@ const VideoProviders = {
                 ind += "playerInstance.setup({".length;
                 var curly = 1;
                 var text = false;
-                var results = [];
+                var results = ["{"];
                 var str = "";
                 for (; ind < html.length; ind++) {
                   var char = html.charAt(ind);
-
+                  results.push(char)
                   if (char == "'") {
                     text = !text
-                    if (!text) {
-                      results.push(str)
-                      str = "";
-                    }
+
                   } else if (!text && char == "{") {
                     curly++;
                   } else if (!text && char == "}") {
                     curly--;
                     if (curly == 0) break;
-                  } else if (text) {
-                    str += char
                   }
 
                 }
-                source = results[0]
-                type = "source"
+                var parsed = results.join("")
+
+                  // Replace ":" with "@colon@" if it's between double-quotes
+                  .replace(/:\s*"([^"]*)"/g, function (match, p1) {
+                    return ': "' + p1.replace(/:/g, '@colon@') + '"';
+                  })
+
+                  // Replace ":" with "@colon@" if it's between single-quotes
+                  .replace(/:\s*'([^']*)'/g, function (match, p1) {
+                    return ': "' + p1.replace(/:/g, '@colon@') + '"';
+                  })
+
+                  // Add double-quotes around any tokens before the remaining ":"
+                  .replace(/(['"])?([a-z0-9A-Z_]+)(['"])?\s*:/g, '"$2": ')
+
+                  // Turn "@colon@" back into ":"
+                  .replace(/@colon@/g, ':')
+                  .replace(/(.*?),\s*(\}|])/g, "$1$2");
+
+
+                parsed = JSON.parse(parsed);
+                var max = null;
+                parsed.sources.forEach((item) => {
+                  if (item.file) {
+                    if (!max) max = item;
+                    if ((parseInt(item.label) || 0) > (parseInt(max.label) || 0)) {
+                      max = item;
+                    }
+                  }
+                })
+                out.source = max.file;
+                out.type = "source"
+                out.quality = max.label;
               }
             })
           }
-          return {
-            name: val.text(),
-            url: source,
-            type: type
-          }
+          return out
         }).get());
   },
 };
