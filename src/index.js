@@ -27,7 +27,7 @@ class Episode {
   }) {
     this.name = name || null;
     this.url = url || null;
-    this.videoLinks = videoLinks || null;
+    if (videoLinks) this.videoLinks = videoLinks;
   }
 
   fetch() {
@@ -44,13 +44,15 @@ class Anime {
     id,
     summary,
     genres,
-    episodes
+    episodes,
+    released
   }) {
     this.name = name || null;
     this.url = url || null;
     this.id = id || null;
     this.summary = summary || null;
     this.genres = genres || null;
+    this.released = released || null;
     this.episodes = episodes || null;
     debug(`Anime created: ${this}`);
   }
@@ -140,6 +142,8 @@ class SearchResult {
     return Anime.fromSearchResult(this);
   }
 }
+
+
 
 module.exports = {
   Page,
