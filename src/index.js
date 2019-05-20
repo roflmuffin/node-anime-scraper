@@ -27,7 +27,7 @@ class Episode {
   }) {
     this.name = name || null;
     this.url = url || null;
-    if (videoLinks) this.videoLinks = videoLinks;
+    this.videoLinks = videoLinks || null;
   }
 
   fetch() {
