@@ -44,8 +44,8 @@ class Anime {
     id,
     summary,
     genres,
-    episodes,
-    released
+    released,
+    episodes
   }) {
     this.name = name || null;
     this.url = url || null;
