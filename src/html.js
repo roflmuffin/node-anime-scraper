@@ -105,7 +105,7 @@ const VideoProviders = {
                     }
                   }
                 })
-                out.source = max.file;
+                out.url = max.file;
                 out.type = "source"
                 out.quality = max.label;
                 out.sources = parsed.sources;
