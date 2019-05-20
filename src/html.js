@@ -31,9 +31,9 @@ function parseAnimePage($) {
     url: `${BASE_URL}${$('[rel="canonical"]').attr('href')}`,
     name: $('.anime_info_body h1').text(),
     summary: $('span:contains("Plot Summary")').get(0).nextSibling.data,
+    released: $("span:contains('Released')").get(0).nextSibling.data,
     genres: $("span:contains('Genre')").parent().find('a').map((i, val) => $(val).attr('title'))
-      .get(),
-    released: $("span:contains('Released')").get(0).nextSibling.data
+      .get()
   };
 }
 
