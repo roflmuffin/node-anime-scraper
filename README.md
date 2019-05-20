@@ -76,3 +76,4 @@ Please note that this version of this package currently uses AirBNB ES6 as a sty
 Many thanks to contributors.
 
 - [van-nguyen](https://github.com/van-nguyen)
+- [andrewprivate](https://github.com/andrewprivate)
