@@ -5,7 +5,7 @@ const html = require('./html');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
-const BASE_URL = 'https://ww1.gogoanime.io';
+const BASE_URL = 'https://gogoanime.io';
 
 const cHttp = new CloudHttp();
 
@@ -20,7 +20,11 @@ class Page {
 }
 
 class Episode {
-  constructor({ name, url, videoLinks }) {
+  constructor({
+    name,
+    url,
+    videoLinks
+  }) {
     this.name = name || null;
     this.url = url || null;
     this.videoLinks = videoLinks || null;
@@ -34,7 +38,14 @@ class Episode {
 }
 
 class Anime {
-  constructor({ name, url, id, summary, genres, episodes }) {
+  constructor({
+    name,
+    url,
+    id,
+    summary,
+    genres,
+    episodes
+  }) {
     this.name = name || null;
     this.url = url || null;
     this.id = id || null;
@@ -45,14 +56,15 @@ class Anime {
   }
 
   fetchEpisodes() {
-    const url = 'https://ww1.gogoanime.io/load-list-episode';
+    const url = BASE_URL + '/load-list-episode';
 
     const options = {
       query: {
         ep_start: 0,
         ep_end: 2000,
         id: this.id,
-      } };
+      }
+    };
 
     return Page.fromUrl(url, options).then(html.parseEpisodeListing).then((episodes) => {
       this.episodes = episodes.map(x => new Episode(x));
@@ -61,8 +73,10 @@ class Anime {
 
   fetchAllEpisodes() {
     debug(`Fetching all episodes for anime: ${this}`);
-    return Promise.map(this.episodes, episode => episode.fetch(), { concurrency: 1 })
-    .then(() => this);
+    return Promise.map(this.episodes, episode => episode.fetch(), {
+        concurrency: 1
+      })
+      .then(() => this);
   }
 
   fetchInformation() {
@@ -76,7 +90,11 @@ class Anime {
   }
 
   static fromName(name) {
-    return Anime.search(name).then(results => results[0]).then(result => result.toAnime());
+
+    return Anime.search(name).then((results) => {
+
+      return results[0]
+    }).then(result => result.toAnime());
   }
 
   static fromPage($) {
@@ -96,7 +114,9 @@ class Anime {
 
     const options = {
       method: 'GET',
-      query: { keyword: query },
+      query: {
+        keyword: query
+      },
     };
 
     debug(`Running search for ${query}`);
@@ -107,7 +127,10 @@ class Anime {
 }
 
 class SearchResult {
-  constructor({ name, url }) {
+  constructor({
+    name,
+    url
+  }) {
     this.name = name || null;
     this.url = url || null;
     debug(`Search result created: ${this.name}`);
