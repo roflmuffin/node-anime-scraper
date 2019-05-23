@@ -44,6 +44,7 @@ class Anime {
     id,
     summary,
     genres,
+    released,
     episodes
   }) {
     this.name = name || null;
@@ -51,6 +52,7 @@ class Anime {
     this.id = id || null;
     this.summary = summary || null;
     this.genres = genres || null;
+    this.released = released || null;
     this.episodes = episodes || null;
     debug(`Anime created: ${this}`);
   }
@@ -140,6 +142,8 @@ class SearchResult {
     return Anime.fromSearchResult(this);
   }
 }
+
+
 
 module.exports = {
   Page,
