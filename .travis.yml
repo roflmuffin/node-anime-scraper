@@ -5,3 +5,5 @@ script: npm run test-coverage
 cache:
   directories:
     - node_modules
+notifications:
+    webhooks: https://www.travisbuddy.com/
