@@ -6,7 +6,7 @@ module.exports = {
   TEST_SEARCH_RESULT: process.env.TEST_SEARCH_RESULT || ['Cowboy Bebop', 'Cowboy Bebop Knockin` on Heaven`s Door', 'Cowboy Bebop (Dub)'],
 
   TEST_ANIME_SMALL_URL: process.env.TEST_ANIME_SMALL_URL || 'https://ww1.gogoanime.io/category/haikyuu-ova',
-  TEST_ANIME_SMALL_EPISODECOUNT: process.env.TEST_ANIME_SMALL_EPISODECOUNT || 2,
+  TEST_ANIME_SMALL_EPISODECOUNT: process.env.TEST_ANIME_SMALL_EPISODECOUNT || 3,
 
   TEST_EPISODE_URL: process.env.TEST_EPISODE_URL || 'https://ww1.gogoanime.io/boku-dake-ga-inai-machi-episode-1',
 

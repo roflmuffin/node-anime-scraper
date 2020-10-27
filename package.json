@@ -1,6 +1,6 @@
 {
   "name": "anime-scraper",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Scrapes information from Gogo Anime to get Anime, Episode & Video information & urls.",
   "main": "src/index.js",
   "scripts": {
