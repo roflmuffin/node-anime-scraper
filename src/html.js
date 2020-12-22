@@ -106,8 +106,8 @@ const VideoProviders = {
                     })
 
                     // Add double-quotes around any tokens before the remaining ":"
+                    
                     .replace(/(['"])?([a-z0-9A-Z_]+)(['"])?\s*:/g, '"$2": ')
-
                     // Turn "@colon@" back into ":"
                     .replace(/@colon@/g, ':')
                     .replace(/(.*?),\s*(\}|])/g, "$1$2");
@@ -143,7 +143,7 @@ const VideoProviders = {
 
 function parseVideo($) {
 
-  const vidStreaming = $('[data-video*="//gogo-stream.com/"]').attr('data-video');
+  const vidStreaming = $('[data-video*="//gogo-play.net/"]').attr('data-video');
   debug(`Found Vidstreaming link: ${vidStreaming}`);
 
   if (vidStreaming != null) {
